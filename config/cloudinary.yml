@@ -1,0 +1,19 @@
+---
+development:
+  cloud_name: dtzmyqacy
+  api_key: '536927826329789'
+  api_secret: PAFNyr9SJCXTuUe3byv4boYVe1A
+  enhance_image_tag: true
+  static_file_support: false
+production:
+  cloud_name: dtzmyqacy
+  api_key: '536927826329789'
+  api_secret: PAFNyr9SJCXTuUe3byv4boYVe1A
+  enhance_image_tag: true
+  static_file_support: true
+test:
+  cloud_name: dtzmyqacy
+  api_key: '536927826329789'
+  api_secret: PAFNyr9SJCXTuUe3byv4boYVe1A
+  enhance_image_tag: true
+  static_file_support: false
