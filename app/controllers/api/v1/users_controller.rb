@@ -3,7 +3,7 @@ class Api::V1::UsersController < ApplicationController
     before_action :authenticate_request!, except: [:create, :sign_in]
 
     def create
-      user = initialize_user
+      user = User.new(user_params)
       unless user.save
         render json: {status: 500, message: user.errors.full_messages}
       else
@@ -93,9 +93,5 @@ class Api::V1::UsersController < ApplicationController
       else
         render json: {status: 500, message: 'Invalid Username/Password'}
       end
-    end
-
-    def initialize_user
-      @user ||= User.new(user_params)
     end
 end
