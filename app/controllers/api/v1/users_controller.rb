@@ -1,6 +1,6 @@
 require 'rqrcode_png'
 class Api::V1::UsersController < ApplicationController
-    before_action :authenticate_request!, except: [:create, :sign_in]
+    before_action :authenticate_request!, except: [:create, :login]
 
     def create
       user = User.new(user_params)
@@ -11,13 +11,10 @@ class Api::V1::UsersController < ApplicationController
       end
     end
 
-    def sign_in
-      user = User.find_for_database_authentication(email: params[:user][:email])
-      if user && user.otp_module_disabled?
-        validate_password(user, params[:user][:password])
-      elsif user && user.otp_module_enabled? && user.valid_password?(password)
-        render json: {status: 200, message: "Enter OTP", user: payload(user)}
-      end
+    def login
+      @user = User.find_for_database_authentication(email: params[:user][:credential]) ||
+        User.find_for_database_authentication(username: params[:user][:credential])
+      @user_payload = payload(@user)
     end
 
     def verify_otp
@@ -85,13 +82,5 @@ class Api::V1::UsersController < ApplicationController
         auth_token: JsonWebToken.encode({user_id: user.id}),
         user: user
       }
-    end
-
-    def validate_password(user, password)
-      if user.valid_password?(password)
-        render json: {status: 200, message: "Login Successfully", user: payload(user)}
-      else
-        render json: {status: 500, message: 'Invalid Username/Password'}
-      end
     end
 end

@@ -10,5 +10,5 @@ class User < ApplicationRecord
   # validations
 
   validates_presence_of :name, :username , on: :create
-
+  validates :username, uniqueness: true
 end
