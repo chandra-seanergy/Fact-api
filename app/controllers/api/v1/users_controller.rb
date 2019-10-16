@@ -1,22 +1,21 @@
 require 'rqrcode_png'
 class Api::V1::UsersController < ApplicationController
     before_action :authenticate_request!, except: [:create, :sign_in]
-    # before_action :find_user, only: [:enable_two_factor_authentication, :disable_two_factor_authentication]
 
     def create
-      @user = User.new(user_params)
-      if @user.save
-        render json: {status: 201, message: "Registered Successfully", user: payload(@user)}
+      user = initialize_user
+      unless user.save
+        render json: {status: 500, message: user.errors.full_messages}
       else
-        render json: {status: 500, message: @user.errors.full_messages}
+        render json: {status: 201, message: "Registered Successfully", user: payload(user)}
       end
     end
 
     def sign_in
-      @user = User.find_for_database_authentication(email: params[:user][:email])
-      if @user && @user.otp_module_disabled?
-        validate_password(@user, params[:user][:password])
-      elsif @user && @user.otp_module_enabled? && @user.valid_password?(password)
+      user = User.find_for_database_authentication(email: params[:user][:email])
+      if user && user.otp_module_disabled?
+        validate_password(user, params[:user][:password])
+      elsif user && user.otp_module_enabled? && user.valid_password?(password)
         render json: {status: 200, message: "Enter OTP", user: payload(user)}
       end
     end
@@ -94,5 +93,9 @@ class Api::V1::UsersController < ApplicationController
       else
         render json: {status: 500, message: 'Invalid Username/Password'}
       end
+    end
+
+    def initialize_user
+      @user ||= User.new(user_params)
     end
 end
