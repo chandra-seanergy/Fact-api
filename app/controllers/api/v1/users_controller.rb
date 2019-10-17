@@ -1,6 +1,8 @@
 require 'rqrcode_png'
 class Api::V1::UsersController < ApplicationController
-    before_action :authenticate_request!, except: [:create, :login]
+    before_action :authenticate_request!, except: [:create, :login, :verify_otp]
+    before_action :find_user, only: [:login, :verify_otp]
+    before_action :validate_password, only: [:login]
 
     def create
       user = User.new(user_params)
@@ -12,63 +14,23 @@ class Api::V1::UsersController < ApplicationController
     end
 
     def login
-      @user = User.find_for_database_authentication(email: params[:user][:credential]) ||
-        User.find_for_database_authentication(username: params[:user][:credential])
-      @user_payload = payload(@user)
+      if @user.otp_module_disabled?
+          render json: {status: 200, message: "Login Successfully", user: payload(@user)}
+      else
+         render json: {status: 200, message: "Enter OTP"}
+      end
     end
 
     def verify_otp
-      if params[:user][:otp_code].size > 0
-        if @current_user.authenticate_otp(params[:user][:otp_code], drift: 60)
-          render json: {status: 200, message: "Login Successfully.", user: payload(user)}
-        else
-          render json: {status: 500, message: 'Invalid OTP'}
-        end
+      if  params[:user][:otp_code].size > 0 && @user.authenticate_otp(params[:user][:otp_code], drift: 60)
+        render json: {status: 200, message: "Login Successfully.", user: payload(@user)}
       else
-        render json: {status: 500, message: 'Your account needs to supply a token'}
+        render json: {status: 500, message: 'Invalid OTP'}
       end
     end
 
     def user_profile
       render json: {user: @current_user}
-    end
-
-    def fetch_qr
-      qrcode = RQRCode::QRCode.new(@current_user.provisioning_uri, size: 10, level: :h )
-      png = qrcode.as_png(
-        bit_depth: 1,
-        border_modules: 4,
-        color_mode: ChunkyPNG::COLOR_GRAYSCALE,
-        color: 'black',
-        file: nil,
-        fill: 'white',
-        module_px_size: 6,
-        resize_exactly_to: false,
-        resize_gte_to: false,
-      )
-  		File.open(Rails.root.join("public/#{@current_user.id}.png"), 'wb'){|f| f.write png }
-  		image = Cloudinary::Uploader.upload(Rails.root.join("public/#{@current_user.id}.png"))
-  		File.delete("./public/#{@current_user.id}.png")
-  		qrcode = image.as_json(only: ["public_id", "url"])
-      render json: {status: 200, message: "QR fetched", qr: qrcode}
-    end
-
-    def enable_two_factor_authentication
-      if @current_user.authenticate_otp(params[:user][:otp_code], drift: 60)
-        @current_user.otp_module_enabled!
-        render json: {status: 200, message: "Two Factor Authentication Enabled"}
-      else
-        render json: {status: 500, message: 'Two Factor Authentication could not be enabled'}
-      end
-    end
-
-    def disable_two_factor_authentication
-      if @current_user.authenticate_otp(params[:user][:otp_code], drift: 60)
-        @current_user.otp_module_disabled!
-        render json: {status: 200, message: "Two Factor Authentication Disabled"}
-      else
-        render json: {status: 500, message: 'Two Factor Authentication could not be disabled'}
-      end
     end
 
     private
@@ -82,5 +44,16 @@ class Api::V1::UsersController < ApplicationController
         auth_token: JsonWebToken.encode({user_id: user.id}),
         user: user
       }
+    end
+
+    def find_user
+      @user = User.find_for_database_authentication(email: params[:user][:credential]) ||
+            User.find_for_database_authentication(username: params[:user][:credential])
+      render json: {status: 500, message: "No record found."} unless @user
+    end
+
+    def validate_password
+      render json: {status: 500, message: "Invalid Login or Password."} unless
+        @user.valid_password?(params[:user][:password])
     end
 end
