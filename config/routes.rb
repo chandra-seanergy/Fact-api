@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users, :controllers => { :registrations => "api/v1/users", :confirmations => "api/v1/users" }
+  # get :resend_confirmation
 
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   api_version(:module => "Api/V1", :header => {:name => "Accept", :value => "application/vnd.versionist_api.v1+json"}) do
