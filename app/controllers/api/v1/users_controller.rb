@@ -1,7 +1,7 @@
 require 'rqrcode_png'
 class Api::V1::UsersController < ApplicationController
-    before_action :authenticate_request!, except: [:create, :login, :verify_otp]
-    before_action :find_user, only: [:login, :verify_otp]
+    before_action :authenticate_request!, except: [:create, :login, :verify_otp, :show, :resend_confirmation]
+    before_action :find_user, only: [:login, :verify_otp, :resend_confirmation]
     before_action :validate_password, only: [:login]
 
     def create
@@ -29,6 +29,27 @@ class Api::V1::UsersController < ApplicationController
       end
     end
 
+
+    def show
+       @user = User.confirm_by_token(params[:confirmation_token])
+       if @user.errors.empty?
+         render json: {status: 200, message: "Your account verified."}
+       else
+          render json: {status: 500, message: @user.errors.full_messages}
+       end
+    end
+
+    def resend_confirmation
+      if @user.confirmed_at.nil?
+        render json: {status: 200, message: "Your request has been received. A new confirmation email has been sent."}
+       elsif @user.confirmed_at.present?
+        render json: {status: 200, message: "This account has already been confirmed"}
+      else
+        render json: {status: 404, message: "No user account exists for this email."}
+      end
+    end
+
+
     def user_profile
       render json: {user: @current_user}
     end
@@ -49,7 +70,7 @@ class Api::V1::UsersController < ApplicationController
     def find_user
       @user = User.find_for_database_authentication(email: params[:user][:credential]) ||
             User.find_for_database_authentication(username: params[:user][:credential])
-      render json: {status: 500, message: "No record found."} unless @user
+      render json: {status: 500, message: "Invalid"} unless @user
     end
 
     def validate_password

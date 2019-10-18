@@ -1,5 +1,11 @@
-<p>Welcome <%= @email %>!</p>
+<div style="background: #fafafa;border-top: 3px solid palevioletred;text-align: center;">
+  <div style="padding: 32px;"><img alt="GitLab" src="https://ci3.googleusercontent.com/proxy/h2NYYPjooDBPrKDR1zQTq8VZbRj-5HHNtmh6cIefmDw1EFVMWU_kKBDkDRm6kA6aB7A7oPzVOaGg5pojnHYkjAdBqT33loeozrDlnY61QksUAPjU0Pa2OPwYd-yncMbG-jlGPTHLE6Jc7W7pPt27LIzsfwWoWwRa-1Zwzw676VyUSWl10WGyHZc1kNA=s0-d-e1-ft#https://gitlab.com/assets/mailers/gitlab_header_logo-153749eaa7ea6fafcb995161abd3247bc4c4500f31498b0c4024f50093983ac0.gif" width="55" height="50" class="CToWUd"></div>
+  <div style="background: #fff;border: 1px solid #ededed;padding: 24px;margin-left: 15%;margin-right: 15%;">
+    <div style="font-size: 18px;">Thanks for signing up to Factz!</div>
+    <div style="font-size: 16px;">To get started, click the link below to confirm your account.</div>
 
-<p>You can confirm your account email through the link below:</p>
+    <p style="font-size: 18px;"><%= link_to 'Confirm your account', user_confirmation_url(@resource, confirmation_token: @token) %></p>
+  </div>
 
-<p><%= link_to 'Confirm my account', user_confirmation_url(@resource, confirmation_token: @token) %></p>
+  <p>You're receiving this email because of your account on <%= link_to 'Factz.com', "https://factz.com/" %>. <%= link_to 'Manage all notifications', "https://factz.com/settings" %> · <%= link_to 'Help', "https://factz.com/help" %></p>
+</div>
