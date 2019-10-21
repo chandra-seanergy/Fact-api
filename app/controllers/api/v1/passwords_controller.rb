@@ -9,7 +9,7 @@ class Api::V1::PasswordsController < ApplicationController
 
   def reset_password
     if @user.reset_password!(params[:password])
-      render json: {status: 200, message: "Password updated"}
+      render json: {status: 200, message: "Your password has been changed successfully."}
     else
       render json: {status: 500, message: @user.errors.full_messages}
     end
