@@ -46,11 +46,8 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
     :address => 'smtp.gmail.com',
     :port => 587,
-    :user_name => 'mywork@seanergysoftech.com',
-    :password => 'Seanergy^9',
     :authentication => 'plain',
-    :openssl_verify_mode => 'none',
-    domain: "localhost:3000"
+    :openssl_verify_mode => 'none'
   }
   # Raises error for missing translations.
   # config.action_view.raise_on_missing_translations = true
