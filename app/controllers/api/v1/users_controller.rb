@@ -19,7 +19,7 @@ class Api::V1::UsersController < ApplicationController
       if @user.otp_module_disabled?
         render json: {status: 200, message: "Login Successfully", user: payload(@user)}
       else
-        render json: {status: 200, message: "Enter OTP"}
+        render json: {status: 200, message: "Enter OTP", otp_module: "enable"}
       end
     end
 
