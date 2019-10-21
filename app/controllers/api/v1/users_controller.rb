@@ -17,9 +17,9 @@ class Api::V1::UsersController < ApplicationController
 
     def login
       if @user.otp_module_disabled?
-          render json: {status: 200, message: "Login Successfully", user: payload(@user)}
+        render json: {status: 200, message: "Login Successfully", user: payload(@user)}
       else
-         render json: {status: 200, message: "Enter OTP"}
+        render json: {status: 200, message: "Enter OTP"}
       end
     end
 
@@ -43,7 +43,7 @@ class Api::V1::UsersController < ApplicationController
 
     def resend_confirmation
       @user = User.find_by(email: params[:user][:email])
-      render json: {status: 404, message: "No user account exists for this email."} unless @user
+      render json: {status: 404, message: "No record found."} unless @user
       if @user.confirmed_at.present?
         render json: {status: 200, message: "This account has already been confirmed"}
       else
@@ -72,12 +72,12 @@ class Api::V1::UsersController < ApplicationController
     def find_user
       @user = User.find_for_database_authentication(email: params[:user][:credential]) ||
             User.find_for_database_authentication(username: params[:user][:credential])
-      render json: {status: 500, message: "Invalid"} unless @user
+      render json: {status: 404, message: "No record found."} unless @user
     end
 
     def validate_password
       render json: {status: 500, message: "Invalid Login or Password."} unless
-        @user.valid_password?(params[:user][:password])
+      @user.valid_password?(params[:user][:password])
     end
 
     def confirmed_user

@@ -8,12 +8,11 @@ class User < ApplicationRecord
   attr_accessor :otp_code_token
 
   # validations
-
+  
   validates_presence_of :name, :username , on: :create
   validates :username, uniqueness: true
 
   def password_token_valid?
     (self.reset_password_sent_at + 4.hours) > Time.now.utc
   end
-
 end
