@@ -28,4 +28,5 @@ def reset_password!(password)
  save!
 end
 
+
 end
