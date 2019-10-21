@@ -29,6 +29,4 @@ class Api::V1::PasswordsController < ApplicationController
     @user = User.find_by(reset_password_token: token)
     render json: {status: 500, message: "Link not valid or expired. Try generating a new link."} unless @user.present? && @user.password_token_valid?
   end
-
-
 end
