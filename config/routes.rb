@@ -25,5 +25,12 @@ Rails.application.routes.draw do
          put :reset_password
       end
     end
+    resources :accounts do
+      collection do
+        post :validate_username
+        delete :delete_account
+        patch :change_username
+      end
+    end
   end
 end

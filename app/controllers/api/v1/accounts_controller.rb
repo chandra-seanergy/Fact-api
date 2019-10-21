@@ -19,9 +19,9 @@ class Api::V1::AccountsController < ApplicationController
 
   def validate_username
     if @current_user.username.eql?(params[:user][:username])
-      render json: {message: "disble"}
+      render json: {status: true}
     else
-      render json: {message: "enable"}
+      render json: {status: false}
     end
   end
 end
