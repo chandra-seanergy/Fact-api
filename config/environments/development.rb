@@ -44,14 +44,13 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.default_url_options = { host: 'localhost:3000'}
   config.action_mailer.smtp_settings = {
-    :address => 'smtp.sendgrid.com',
+    :address => 'smtp.gmail.com',
     :port => 587,
-    :domain => 'sendgrid.com',
-    :user_name => ENV['USERNAME'],
-    :password => ENV['PASSWORD'],
+    :user_name => 'dhruv.heroku@gmail.com',
+    :password => 'Annapurna@123',
     :authentication => 'plain',
-    :enable_starttls_auto => true,
-    :openssl_verify_mode => 'none'
+    :openssl_verify_mode => 'none',
+    domain: "localhost:3000"
   }
   # Raises error for missing translations.
   # config.action_view.raise_on_missing_translations = true
