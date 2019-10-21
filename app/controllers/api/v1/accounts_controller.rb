@@ -1,5 +1,6 @@
 class Api::V1::AccountsController < ApplicationController
   before_action :authenticate_request!
+  before_action :validate_username, only: [:change_username]
 
   def change_username
     if @current_user.update(username: params[:user][:username])
@@ -17,11 +18,9 @@ class Api::V1::AccountsController < ApplicationController
     end
   end
 
+  private
   def validate_username
-    if @current_user.username.eql?(params[:user][:username])
-      render json: {status: true}
-    else
-      render json: {status: false}
-    end
+    @user = User.find_for_database_authentication(username: params[:user][:username])
+    render json: {status: 500, message: "Username already exist."} if @user
   end
 end
