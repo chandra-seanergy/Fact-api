@@ -35,9 +35,9 @@ class Api::V1::UsersController < ApplicationController
     def show
        @user = User.confirm_by_token(params[:confirmation_token])
        if @user.errors.empty?
-        redirect_to "http://182.75.34.146:5000/?confirmation=mail"
+        redirect_to "#{VIEW_DOMAIN}?confirmation=mail"
        else
-        redirect_to "http://182.75.34.146:5000/?message=#{@user.errors.full_messages}"
+        redirect_to "#{VIEW_DOMAIN}?message=#{@user.errors.full_messages}"
        end
     end
 
