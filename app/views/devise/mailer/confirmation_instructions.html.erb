@@ -3,7 +3,7 @@
   <div style="background: #fff;border: 1px solid #ededed;padding: 24px;margin-left: 15%;margin-right: 15%;">
     <div style="font-size: 18px;">Thanks for signing up to Factz!</div>
     <div style="font-size: 16px;">To get started, click the link below to confirm your account.</div>
-    <p style="font-size: 18px;"><a href="http://192.168.10.24:3000/users/confirmation.<%=@resource.id%>?confirmation_token=<%=@token%>">Confirm your account</a></p>
+    <p style="font-size: 18px;"><a href="<%=APP_DOMAIN%>users/confirmation.<%=@resource.id%>?confirmation_token=<%=@token%>">Confirm your account</a></p>
   </div>
   <p>You're receiving this email because of your account on <%= link_to 'Factz.com', "https://factz.com/" %>. <%= link_to 'Manage all notifications', "https://factz.com/settings" %> · <%= link_to 'Help', "https://factz.com/help" %></p>
 </div>
