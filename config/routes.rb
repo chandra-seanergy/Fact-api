@@ -10,6 +10,7 @@ Rails.application.routes.draw do
         get :user_profile
         post :verify_otp
         get :resend_confirmation
+        put :update_profile
       end
     end
     resources :two_factor_authentications do
