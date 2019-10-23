@@ -17,9 +17,9 @@ class Api::V1::UsersController < ApplicationController
 
     def login
       if @user.otp_module_disabled?
-        render json: {status: 200, message: "Login Successfully", user: payload(@user)}
+        render json: {status: 200, message: "Login Successfully", user: payload(@user), otp_module: "disabled"}
       else
-        render json: {status: 200, message: "Enter OTP"}
+        render json: {status: 200, message: "Enter OTP", otp_module: "enabled"}
       end
     end
 
@@ -72,7 +72,7 @@ class Api::V1::UsersController < ApplicationController
     def find_user
       @user = User.find_for_database_authentication(email: params[:user][:credential]) ||
             User.find_for_database_authentication(username: params[:user][:credential])
-      render json: {status: 404, message: "No record found."} unless @user
+      render json: {status: 404, message: "Invalid Login or Password."} unless @user
     end
 
     def validate_password
