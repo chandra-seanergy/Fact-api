@@ -34,5 +34,6 @@ Rails.application.routes.draw do
         patch :change_username
       end
     end
+    resources :groups
   end
 end
