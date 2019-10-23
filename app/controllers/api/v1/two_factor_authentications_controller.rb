@@ -30,11 +30,10 @@ class Api::V1::TwoFactorAuthenticationsController < ApplicationController
     end
 
     def disable_two_factor_authentication
-      if @current_user.authenticate_otp(params[:user][:otp_code], drift: 60)
-        @current_user.otp_module_disabled!
+      if @current_user.otp_module_disabled!
         render json: {status: 200, message: "Two Factor Authentication Disabled"}
       else
-        render json: {status: 500, message: "Invalid two-factor code."}
+        render json: {status: 500, message: "Error."}
       end
     end
 end
