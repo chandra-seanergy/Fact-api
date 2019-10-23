@@ -56,9 +56,21 @@ class Api::V1::UsersController < ApplicationController
       render json: {user: @current_user}
     end
 
+    def update_profile
+      if @current_user.update(profile_params)
+        render json: {status: 200, message: "Profile Updated Successfully."}
+      else
+        render json: {status: 500, message: @current_user.errors.full_messages}
+      end
+    end
+
     private
     def user_params
       params.require(:user).permit(:name, :email, :password, :username)
+    end
+
+    def profile_params
+      params.require(:user).permit(:name, :email, :public_email, :commit_email, :skype, :linkedin, :twitter, :website_url, :location, :organization, :bio, :private_profile, :private_contributions)
     end
 
     def payload(user)

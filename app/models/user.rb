@@ -11,6 +11,7 @@ class User < ApplicationRecord
   
   validates_presence_of :name, :username , on: :create
   validates :username, uniqueness: true
+  validates_uniqueness_of :public_email, :commit_email, :user_id , :allow_blank => true, :allow_nil => true
 
   def generate_password_token!
    self.reset_password_token = generate_token
