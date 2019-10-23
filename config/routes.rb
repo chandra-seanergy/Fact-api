@@ -23,7 +23,8 @@ Rails.application.routes.draw do
     resources :passwords do
       collection do
         post :forgot_password
-         put :reset_password
+        put :reset_password
+        put :change_password
       end
     end
     resources :accounts do
