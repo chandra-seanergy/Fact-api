@@ -5,6 +5,7 @@ class Api::V1::GroupsController < ApplicationController
   def create
     group = Group.new(group_params)
     group.owner_id = @current_user.id
+    group.avatar = params[:group][:avatar] if !params[:group][:avatar].nil? and File.exist?(params[:group][:avatar])
     if group.save
       render json: {status: 200, message: "Group created successfully.", group: group}
     else
@@ -27,7 +28,7 @@ class Api::V1::GroupsController < ApplicationController
   private
 
   def group_params
-    params.require(:group).permit(:name, :description, :visibility, :avatar)
+    params.require(:group).permit(:name, :description, :visibility)
   end
 
   def find_group
