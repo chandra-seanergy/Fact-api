@@ -1,9 +1,18 @@
 class Group < ApplicationRecord
+  enum visibility: { is_private: 0, is_internal: 1, is_public: 2 }
+  # callbacks
+
   before_create :generate_group_id
 
+  #validations
+
   validates :unique_group_id, uniqueness: true
-  enum visibility: { is_private: 0, is_internal: 1, is_public: 2 }
   validates_presence_of :name, :description , :visibility, on: :create
+
+  #associations
+
+  belongs_to :owner,class_name:"User",foreign_key: :owner_id
+  scope :owned_groups, -> (user) {where(owner:user)}
 
   def generate_group_id
 	begin

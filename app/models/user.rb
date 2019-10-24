@@ -17,6 +17,10 @@ class User < ApplicationRecord
 
   before_create :generate_user_id
 
+  #associations
+
+  has_many :owned_groups,class_name:'Group',foreign_key: :owner_id
+
   def generate_password_token!
    self.reset_password_token = generate_token
    self.reset_password_sent_at = Time.now.utc
