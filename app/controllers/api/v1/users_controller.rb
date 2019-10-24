@@ -57,6 +57,7 @@ class Api::V1::UsersController < ApplicationController
     end
 
     def update_profile
+      @current_user.avatar = params[:user][:avatar] if !params[:user][:avatar].nil? and File.exist?(params[:user][:avatar])
       if @current_user.update(profile_params)
         render json: {status: 200, message: "Profile Updated Successfully."}
       else
@@ -70,7 +71,7 @@ class Api::V1::UsersController < ApplicationController
     end
 
     def profile_params
-      params.require(:user).permit(:name, :email, :public_email, :commit_email, :skype, :linkedin, :twitter, :website_url, :location, :organization, :bio, :private_profile, :private_contributions, :avatar)
+      params.require(:user).permit(:name, :email, :public_email, :commit_email, :skype, :linkedin, :twitter, :website_url, :location, :organization, :bio, :private_profile, :private_contributions)
     end
 
     def payload(user)
