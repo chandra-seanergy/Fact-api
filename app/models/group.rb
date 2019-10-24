@@ -1,5 +1,6 @@
 class Group < ApplicationRecord
   enum visibility: { is_private: 0, is_internal: 1, is_public: 2 }
+  mount_uploader :avatar, AvatarUploader
   # callbacks
 
   before_create :generate_group_id

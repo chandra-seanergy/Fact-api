@@ -27,7 +27,7 @@ class Api::V1::GroupsController < ApplicationController
   private
 
   def group_params
-    params.require(:group).permit(:name, :description, :visibility)
+    params.require(:group).permit(:name, :description, :visibility, :avatar)
   end
 
   def find_group
