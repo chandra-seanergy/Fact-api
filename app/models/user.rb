@@ -5,6 +5,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable, :confirmable
   has_one_time_password
   enum otp_module: { disabled: 0, enabled: 1 }, _prefix: true
+  mount_uploader :avatar, AvatarUploader
   attr_accessor :otp_code_token
 
   # validations
