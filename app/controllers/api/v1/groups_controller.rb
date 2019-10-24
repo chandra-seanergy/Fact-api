@@ -4,6 +4,7 @@ class Api::V1::GroupsController < ApplicationController
 
   def create
     group = Group.new(group_params)
+    group.owner_id = @current_user.id
     if group.save
       render json: {status: 200, message: "Group created successfully.", group: group}
     else

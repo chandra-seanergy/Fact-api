@@ -11,7 +11,11 @@ class User < ApplicationRecord
   
   validates_presence_of :name, :username , on: :create
   validates :username, uniqueness: true
-  validates_uniqueness_of :public_email, :commit_email, :user_id , :allow_blank => true, :allow_nil => true
+  validates_uniqueness_of :public_email, :commit_email, :unique_user_id , :allow_blank => true, :allow_nil => true
+
+  #callbacks
+
+  before_create :generate_user_id
 
   def generate_password_token!
    self.reset_password_token = generate_token
@@ -27,5 +31,11 @@ class User < ApplicationRecord
    self.reset_password_token = nil
    self.password = password
    save!
+  end
+
+  def generate_user_id
+    begin
+      self.unique_user_id = rand(10000000)
+    end until(User.find_by(unique_user_id: unique_user_id).nil?)
   end
 end
