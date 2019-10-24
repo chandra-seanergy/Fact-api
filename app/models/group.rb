@@ -16,7 +16,7 @@ class Group < ApplicationRecord
 
   def generate_group_id
 	begin
-		self.unique_group_id = rand(10000000)
+	  self.unique_group_id = rand(10000000)
 	end until(Group.find_by(unique_group_id: unique_group_id).nil?)
   end
 end

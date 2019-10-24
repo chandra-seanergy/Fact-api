@@ -11,7 +11,7 @@ class User < ApplicationRecord
   
   validates_presence_of :name, :username , on: :create
   validates :username, uniqueness: true
-  validates_uniqueness_of :public_email, :commit_email, :unique_user_id , :allow_blank => true, :allow_nil => true
+  validates_uniqueness_of :public_email, :commit_email, :unique_user_id , allow_blank: true, allow_nil: true
 
   #callbacks
 
