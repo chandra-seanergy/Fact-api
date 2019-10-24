@@ -1,12 +1,22 @@
 class Group < ApplicationRecord
-  after_create :generate_group_id
+  enum visibility: { is_private: 0, is_internal: 1, is_public: 2 }
+  # callbacks
+
+  before_create :generate_group_id
+
+  #validations
 
   validates :unique_group_id, uniqueness: true
-  enum visibility: { personal: 0, internal: 1, external: 2 }
   validates_presence_of :name, :description , :visibility, on: :create
 
+  #associations
+
+  belongs_to :owner,class_name:"User",foreign_key: :owner_id
+  scope :owned_groups, -> (user) {where(owner:user)}
+
   def generate_group_id
-    unique_id = SecureRandom.hex(6)
-    self.update(unique_group_id: unique_id)
+	begin
+	  self.unique_group_id = rand(10000000)
+	end until(Group.find_by(unique_group_id: unique_group_id).nil?)
   end
 end
