@@ -70,7 +70,7 @@ class Api::V1::UsersController < ApplicationController
     end
 
     def profile_params
-      params.require(:user).permit(:name, :email, :public_email, :commit_email, :skype, :linkedin, :twitter, :website_url, :location, :organization, :bio, :private_profile, :private_contributions)
+      params.require(:user).permit(:name, :email, :public_email, :commit_email, :skype, :linkedin, :twitter, :website_url, :location, :organization, :bio, :private_profile, :private_contributions, :avatar)
     end
 
     def payload(user)
