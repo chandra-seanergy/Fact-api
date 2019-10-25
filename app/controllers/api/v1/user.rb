@@ -7,7 +7,7 @@ class User < ApplicationRecord
   enum otp_module: { disabled: 0, enabled: 1 }, _prefix: true
   mount_uploader :avatar, AvatarUploader
   attr_accessor :otp_code_token
-
+  include PgSearch::Model
   # validations
 
   validates_presence_of :name, :username , on: :create
