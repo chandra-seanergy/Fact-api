@@ -18,6 +18,7 @@ class Group < ApplicationRecord
   #scopes
   scope :owned_groups, -> (user) { where(owner:user) }
   scope :public_groups, ->  { where(visibility: Group.visibilities[:is_public]) }
+  scope :internal_groups, ->  { where(visibility: Group.visibilities[:is_internal]) }
 
   def generate_group_id
   	begin

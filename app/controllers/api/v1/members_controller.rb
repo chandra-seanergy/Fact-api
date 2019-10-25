@@ -33,7 +33,7 @@ class Api::V1::MembersController < ApplicationController
   end
 
   def memeber_params
-    params.require(:group_member).permit(:group_id, :user_id, :member_type)
+    params.require(:group_member).permit(:group_id, :user_id, :member_type, :expiration_date)
   end
 
   def validate_member
