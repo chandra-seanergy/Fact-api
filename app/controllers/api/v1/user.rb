@@ -8,7 +8,6 @@ class User < ApplicationRecord
   mount_uploader :avatar, AvatarUploader
   attr_accessor :otp_code_token
   include PgSearch::Model
-
   # validations
 
   validates_presence_of :name, :username , on: :create
@@ -45,9 +44,5 @@ class User < ApplicationRecord
     begin
       self.unique_user_id = rand(10000000)
     end until(User.find_by(unique_user_id: unique_user_id).nil?)
-  end
-
-  def your_groups
-    self.owned_groups+self.groups
   end
 end

@@ -35,6 +35,14 @@ Rails.application.routes.draw do
       end
     end
     resources :groups
-    resources :group_listing
+    resources :group_listing do
+      collection do
+        get :public_groups
+        get :internal_groups
+        get :user_list
+        get :your_groups
+      end
+    end
+    resources :members
   end
 end
