@@ -8,7 +8,6 @@ class Group < ApplicationRecord
   #validations
   validates :unique_group_id, uniqueness: true
   validates_presence_of :name, :description , :visibility, on: :create
-  validates :name, uniqueness: true
 
   #associations
   belongs_to :owner, class_name:"User", foreign_key: :owner_id
