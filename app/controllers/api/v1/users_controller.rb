@@ -59,7 +59,7 @@ class Api::V1::UsersController < ApplicationController
     def update_profile
       @current_user.avatar = params[:user][:avatar] if !params[:user][:avatar].nil? and File.exist?(params[:user][:avatar])
       if @current_user.update(profile_params)
-        render json: {status: 200, message: "Profile Updated Successfully."}
+        render json: {status: 200, message: "Profile Updated Successfully.", avatar: @current_user.avatar.url}
       else
         render json: {status: 500, message: @current_user.errors.full_messages}
       end
