@@ -46,4 +46,8 @@ class User < ApplicationRecord
       self.unique_user_id = rand(10000000)
     end until(User.find_by(unique_user_id: unique_user_id).nil?)
   end
+
+  def your_groups
+    self.owned_groups+self.groups
+  end
 end
