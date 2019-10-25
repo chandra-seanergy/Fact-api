@@ -33,8 +33,8 @@ class Api::V1::PasswordsController < ApplicationController
   end
 
   def token_validate
-    return render json: {error: 'Token not present'} if params[:token].blank?
     token = params[:token].to_s
+    return render json: {error: 'Token not present'} if token.blank?
     @user = User.find_by(reset_password_token: token)
     render json: {status: 500, message: "Link not valid or expired. Try generating a new link."} unless @user.present? && @user.password_token_valid?
   end

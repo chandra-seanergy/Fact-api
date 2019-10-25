@@ -3,9 +3,9 @@ class Api::V1::GroupsController < ApplicationController
   before_action :find_group, only: [:show, :destroy, :update]
 
   def create
-    group = Group.new(group_params)
+    group, group_avatar = Group.new(group_params), params[:group][:avatar]
     group.owner_id = @current_user.id
-    group.avatar = params[:group][:avatar] if !params[:group][:avatar].nil? and File.exist?(params[:group][:avatar])
+    group.avatar = group_avatar if !group_avatar.nil? and File.exist?(group_avatar)
     if group.save
       render json: {status: 200, message: "Group created successfully.", group: group}
     else
@@ -26,7 +26,8 @@ class Api::V1::GroupsController < ApplicationController
   end
 
   def update
-    @group.avatar = params[:group][:avatar] if !params[:group][:avatar].nil? and File.exist?(params[:group][:avatar])
+    group_avatar = params[:group][:avatar]
+    @group.avatar = group_avatar if !group_avatar.nil? and File.exist?(group_avatar)
     if @group.update(group_params)
       render json: {status: 200, message: "Group updated successfully.", avatar: @group.avatar.url}
     else
