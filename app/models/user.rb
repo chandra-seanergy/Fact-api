@@ -9,7 +9,7 @@ class User < ApplicationRecord
   attr_accessor :otp_code_token
 
   # validations
-  
+
   validates_presence_of :name, :username , on: :create
   validates :username, uniqueness: true
   validates_uniqueness_of :public_email, :commit_email, :unique_user_id , allow_blank: true, allow_nil: true
@@ -20,7 +20,7 @@ class User < ApplicationRecord
 
   #associations
 
-  has_many :owned_groups,class_name:'Group',foreign_key: :owner_id
+  has_many :owned_groups, class_name:'Group', foreign_key: :owner_id
 
   def generate_password_token!
    self.reset_password_token = generate_token
