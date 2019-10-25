@@ -36,5 +36,6 @@ Rails.application.routes.draw do
     end
     resources :groups
     resources :group_listing
+    resources :members 
   end
 end
