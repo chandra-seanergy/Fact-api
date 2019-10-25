@@ -1,6 +1,6 @@
 class Api::V1::GroupsController < ApplicationController
   before_action :authenticate_request!
-  before_action :find_group, only: [:show, :destroy]
+  before_action :find_group, only: [:show, :destroy, :update]
 
   def create
     group = Group.new(group_params)
@@ -22,6 +22,15 @@ class Api::V1::GroupsController < ApplicationController
       render json: {status: 200, message: "Group deleted successfully."}
     else
       render json: {status: 500, message: @group.errors.full_messages}
+    end
+  end
+
+  def update
+    @group.avatar = params[:group][:avatar] if !params[:group][:avatar].nil? and File.exist?(params[:group][:avatar])
+    if @group.update(group_params)
+      render json: {status: 200, message: "Group updated successfully.", group: @group}
+    else
+      render json:{status: 500, message: @group.errors.full_messages}
     end
   end
 
