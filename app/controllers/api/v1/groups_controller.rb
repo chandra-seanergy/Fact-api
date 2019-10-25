@@ -28,7 +28,7 @@ class Api::V1::GroupsController < ApplicationController
   def update
     @group.avatar = params[:group][:avatar] if !params[:group][:avatar].nil? and File.exist?(params[:group][:avatar])
     if @group.update(group_params)
-      render json: {status: 200, message: "Group updated successfully.", group: @group}
+      render json: {status: 200, message: "Group updated successfully.", avatar: @group.avatar.url}
     else
       render json:{status: 500, message: @group.errors.full_messages}
     end
