@@ -13,8 +13,9 @@ class ApplicationController < ActionController::API
   
   private
   def http_token
-    @http_token ||= if request.headers['Authorization'].present?
-      request.headers['Authorization'].split(' ').last
+    request_header = request.headers['Authorization']
+    @http_token ||= if request_header.present?
+      request_header.split(' ').last
     end
   end
 

@@ -24,7 +24,8 @@ class Api::V1::UsersController < ApplicationController
     end
 
     def verify_otp
-      if  params[:user][:otp_code].size > 0 && @user.authenticate_otp(params[:user][:otp_code], drift: 60)
+      user_otp = params[:user][:otp_code]
+      if  user_otp.size > 0 && @user.authenticate_otp(user_otp, drift: 60)
         render json: {status: 200, message: "Login Successfully.", user: payload(@user)}
       else
         render json: {status: 500, message: 'Invalid OTP'}
@@ -34,10 +35,11 @@ class Api::V1::UsersController < ApplicationController
 
     def show
        @user = User.confirm_by_token(params[:confirmation_token])
-       if @user.errors.empty?
+       user_errors = @user.errors
+       if user_errors.empty?
         redirect_to "#{VIEW_DOMAIN}?confirmation=mail"
        else
-        redirect_to "#{VIEW_DOMAIN}?message=#{@user.errors.full_messages}"
+        redirect_to "#{VIEW_DOMAIN}?message=#{user_errors.full_messages}"
        end
     end
 
@@ -57,7 +59,8 @@ class Api::V1::UsersController < ApplicationController
     end
 
     def update_profile
-      @current_user.avatar = params[:user][:avatar] if !params[:user][:avatar].nil? and File.exist?(params[:user][:avatar])
+      user_avatar = params[:user][:avatar]
+      @current_user.avatar = user_avatar if !user_avatar.nil? and File.exist?(user_avatar)
       if @current_user.update(profile_params)
         render json: {status: 200, message: "Profile Updated Successfully.", avatar: @current_user.avatar.url}
       else
@@ -83,8 +86,9 @@ class Api::V1::UsersController < ApplicationController
     end
 
     def find_user
-      @user = User.find_for_database_authentication(email: params[:user][:credential]) ||
-            User.find_for_database_authentication(username: params[:user][:credential])
+      user_credentials = params[:user][:credential]
+      @user = User.find_for_database_authentication(email: user_credentials) ||
+            User.find_for_database_authentication(username: user_credentials)
       render json: {status: 404, message: "Invalid Login or Password."} unless @user
     end
 
