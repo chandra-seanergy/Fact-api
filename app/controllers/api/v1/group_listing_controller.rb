@@ -24,5 +24,4 @@ class Api::V1::GroupListingController < ApplicationController
     render json: {status: 200, message: "Group list feched successfully.", groups: all_groups.map{|x|
        x.attributes.merge(avatar: x.avatar.url)}}
   end
-
 end
