@@ -1,11 +1,11 @@
 class Api::V1::MembersController < ApplicationController
   before_action :authenticate_request!
-  before_action :find_group, except: [:index]
-  before_action :find_group_for_index, only: [:index]
+  before_action :find_group, except: [:member_list]
+  before_action :find_group_for_member_list, only: [:member_list]
   before_action :validate_member, only: [:create]
   before_action :group_member, only: [:destroy]
 
-  def index
+  def member_list
     group_members = @group.users.map{|x| x.attributes.merge(avatar: x.avatar.url)}
     render json: {status: 200, message: "member list fetched successfully.", group_members: group_members }
   end
@@ -33,7 +33,7 @@ class Api::V1::MembersController < ApplicationController
     render json: {status: 500, message: "No record found."} unless @group
   end
 
-  def find_group_for_index
+  def find_group_for_member_list
     @group = Group.find_by(id: params[:group_id])
     render json: {status: 500, message: "No record found."} unless @group
   end

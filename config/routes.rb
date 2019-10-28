@@ -44,6 +44,10 @@ Rails.application.routes.draw do
         get :your_groups
       end
     end
-    resources :members
+    resources :members do
+      collection do
+        get :member_list
+      end
+    end
   end
 end
