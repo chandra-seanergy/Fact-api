@@ -14,7 +14,7 @@ class Api::V1::GroupListingController < ApplicationController
   end
 
   def user_list
-    users = User.all
+    users = User.search_users(params[:user][:credential])
     render json: {status: 200, message: "member list fecthed successfully.", members: users.map{|x|
       x.attributes.merge(avatar: x.avatar.url)}}
   end
@@ -24,4 +24,5 @@ class Api::V1::GroupListingController < ApplicationController
     render json: {status: 200, message: "Group list feched successfully.", groups: all_groups.map{|x|
        x.attributes.merge(avatar: x.avatar.url)}}
   end
+
 end

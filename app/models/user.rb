@@ -47,6 +47,11 @@ class User < ApplicationRecord
     end until(User.find_by(unique_user_id: unique_user_id).nil?)
   end
 
+  def self.search_users(credential='')
+    credentials = "%#{credential}%"
+    where("name ILIKE :search OR username ILIKE :search OR email ILIKE :search", search: credentials)
+  end
+
   def your_groups
     self.owned_groups+self.groups
   end
