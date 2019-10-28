@@ -40,6 +40,7 @@ Rails.application.routes.draw do
         get :public_groups
         get :internal_groups
         get :user_list
+        get :user_list_simple
         get :your_groups
       end
     end
