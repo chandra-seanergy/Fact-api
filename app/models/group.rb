@@ -15,9 +15,9 @@ class Group < ApplicationRecord
   has_many :users, through: :group_members
 
   #scopes
-  scope :owned_groups, -> (user) { where(owner:user) }
-  scope :public_groups, ->  { where(visibility: Group.visibilities[:is_public]) }
-  scope :internal_groups, ->  { where(visibility: Group.visibilities[:is_internal]) }
+  scope :owned_groups, -> (user) { where(owner:user).includes(:group_members) }
+  scope :public_groups, ->  { where(visibility: Group.visibilities[:is_public]).includes(:group_members) }
+  scope :internal_groups, ->  { where(visibility: Group.visibilities[:is_internal]).includes(:group_members) }
 
   def generate_group_id
   	begin
