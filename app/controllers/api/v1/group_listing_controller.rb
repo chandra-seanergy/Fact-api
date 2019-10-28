@@ -4,13 +4,13 @@ class Api::V1::GroupListingController < ApplicationController
   def public_groups
     groups = Group.public_groups
     render json: {status: 200, message: "Group list feched successfully.", groups: groups.map{|x|
-       x.attributes.merge(avatar: x.avatar.url)}}
+       x.attributes.merge(avatar: x.avatar.url, member_count: x.group_members.length)}}
   end
 
   def internal_groups
     groups = Group.internal_groups
     render json: {status: 200, message: "Group list feched successfully.", groups: groups.map{|x|
-       x.attributes.merge(avatar: x.avatar.url)}}
+       x.attributes.merge(avatar: x.avatar.url, member_count: x.group_members.length)}}
   end
 
   def user_list
@@ -28,6 +28,6 @@ class Api::V1::GroupListingController < ApplicationController
   def your_groups
     all_groups = @current_user.your_groups
     render json: {status: 200, message: "Group list feched successfully.", groups: all_groups.map{|x|
-       x.attributes.merge(avatar: x.avatar.url)}}
+       x.attributes.merge(avatar: x.avatar.url, member_count: x.group_members.length)}}
   end
 end

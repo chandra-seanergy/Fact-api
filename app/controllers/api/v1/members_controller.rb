@@ -1,6 +1,7 @@
 class Api::V1::MembersController < ApplicationController
   before_action :authenticate_request!
-  before_action :find_group
+  before_action :find_group, except: [:index]
+  before_action :find_group_for_index, only: [:index]
   before_action :validate_member, only: [:create]
   before_action :group_member, only: [:destroy]
 
@@ -29,6 +30,11 @@ class Api::V1::MembersController < ApplicationController
   private
   def find_group
     @group = Group.find_by(id: params[:group_member][:group_id])
+    render json: {status: 500, message: "No record found."} unless @group
+  end
+
+  def find_group_for_index
+    @group = Group.find_by(id: params[:group_id])
     render json: {status: 500, message: "No record found."} unless @group
   end
 
