@@ -37,7 +37,7 @@ class Api::V1::MembersController < ApplicationController
 
   # Allow only strong parameters to be used for Model Interaction
   def member_params
-    params.require(:group_member).permit(:group_id, :user_ids, :member_type, :expiration_date)
+    params.require(:group_member).permit(:group_id, :member_type, :expiration_date, :user_id => [])
   end
 
   # Validate if a member that needs to be added is already a member of group or not
