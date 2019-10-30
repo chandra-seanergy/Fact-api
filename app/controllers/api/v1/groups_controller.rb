@@ -38,6 +38,11 @@ class Api::V1::GroupsController < ApplicationController
       render json:{status: 500, message: @group.errors.full_messages}
     end
   end
+  # groups created by the current user
+  def owned_groups
+    owned_groups = @current_user.owned_groups
+    render json: {status: 200, owned_groups: owned_groups.pluck(:name)}
+  end
 
   private
   # Allow only Strong parameters to be passed to model
