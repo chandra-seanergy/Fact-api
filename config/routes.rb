@@ -34,7 +34,11 @@ Rails.application.routes.draw do
         patch :change_username
       end
     end
-    resources :groups
+    resources :groups do
+      collection do
+        get :owned_groups
+      end
+    end
     resources :group_listing do
       collection do
         get :public_groups
