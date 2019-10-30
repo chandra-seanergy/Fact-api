@@ -6,7 +6,7 @@ class Api::V1::MembersController < ApplicationController
 
   # Display list of all members in the group 
   def member_list
-    group_members = @group.users.includes(:group_members).map{|x| x.attributes.merge(avatar: x.avatar.url, role: x.group_members.member_type, created_at: x.group_members.created_at, expiration_date: x.group_members.expiration_date])}
+    group_members = @group.users.includes(:group_members).map{|x| x.attributes.merge(avatar: x.avatar.url, role: x.group_members.last.member_type, joined_at: x.group_members.last.created_at, expiration_date: x.group_members.last.expiration_date)}
     render json: {status: 200, message: "member list fetched successfully.", owner: @group.owner.attributes.merge(avatar: @group.owner.avatar.url), members: group_members}
   end
 
