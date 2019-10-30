@@ -1,8 +1,7 @@
 class Api::V1::MembersController < ApplicationController
   before_action :authenticate_request!
   before_action :find_group
-  before_action :validate_member, only: [:create]
-  before_action :group_member, only: [:destroy]
+  before_action :group_member, only: [:delete_member]
 
   # Display list of all members in the group 
   def member_list
@@ -12,16 +11,16 @@ class Api::V1::MembersController < ApplicationController
 
   # Add Member to Group
   def create
-    member = GroupMember.new(memeber_params)
-    if member.save
-      render json: {status: 201, message: "Member added successfully.",  member: member}
+    member = GroupMember.bulk_add_hash(member_params)
+    if GroupMember.import!(member)
+      render json: {status: 201, message: "Members added successfully.", member: member}
     else
       render json: {status: 500, message: member.errors.full_messages}
     end
   end
 
   # Remove Member from Group
-  def destroy
+  def delete_member
     if @group_member.destroy
       render json: {status: 200, message: "member removed successfully."}
     else
@@ -37,8 +36,8 @@ class Api::V1::MembersController < ApplicationController
   end
 
   # Allow only strong parameters to be used for Model Interaction
-  def memeber_params
-    params.require(:group_member).permit(:group_id, :user_id, :member_type, :expiration_date)
+  def member_params
+    params.require(:group_member).permit(:group_id, :user_ids, :member_type, :expiration_date)
   end
 
   # Validate if a member that needs to be added is already a member of group or not
