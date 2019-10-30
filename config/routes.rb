@@ -30,7 +30,7 @@ Rails.application.routes.draw do
     resources :accounts do
       collection do
         post :validate_username
-        delete :delete_account
+        post :delete_account
         patch :change_username
       end
     end
