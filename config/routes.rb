@@ -51,7 +51,7 @@ Rails.application.routes.draw do
     resources :members do
       collection do
         get :member_list
-        delete :delete_member
+        post :delete_member
       end
     end
   end
