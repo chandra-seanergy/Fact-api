@@ -8,6 +8,7 @@ class GroupMember < ApplicationRecord
   belongs_to :group
 
   def self.bulk_add_hash(member_params)
+  	GroupMember.where("group_id=? and user_id in (?)",member_params[:group_id],member_params[:user_id]).destroy_all
   	members = []
     member_params[:user_id].each do |user_id|
     	members<<{group_id: member_params[:group_id], user_id: user_id, member_type: member_params[:member_type].to_i, expiration_date: member_params[:expiration_date]}
