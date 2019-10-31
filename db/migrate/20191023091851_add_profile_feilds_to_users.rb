@@ -13,7 +13,5 @@ class AddProfileFeildsToUsers < ActiveRecord::Migration[6.0]
     add_column :users, :private_profile, :boolean, default: false
     add_column :users, :private_contributions, :boolean, default: false
     add_index :users, :unique_user_id,         unique: true
-    add_index :users, :public_email,
-    add_index :users, :commit_email,
   end
 end
