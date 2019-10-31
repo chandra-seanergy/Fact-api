@@ -5,7 +5,7 @@ class Api::V1::MembersController < ApplicationController
 
   # Display list of all members in the group 
   def member_list
-    group_members = @group.users.includes(:group_members).map{|x| x.attributes.merge(avatar: x.avatar.url, role: x.group_members.last.member_type, joined_at: x.group_members.last.created_at, expiration_date: x.group_members.last.expiration_date)}
+    group_members = @group.get_member_list(member_params)
     render json: {status: 200, message: "member list fetched successfully.", owner: @group.owner.attributes.merge(avatar: @group.owner.avatar.url), members: group_members}
   end
 
@@ -37,7 +37,7 @@ class Api::V1::MembersController < ApplicationController
 
   # Allow only strong parameters to be used for Model Interaction
   def member_params
-    params.require(:group_member).permit(:group_id, :member_type, :expiration_date, :user_id => [])
+    params.require(:group_member).permit(:group_id, :member_type, :credential, :sort_by, :expiration_date, :user_id => [])
   end
 
   # Validate if a member that needs to be added is already a member of group or not

@@ -36,4 +36,30 @@ class Group < ApplicationRecord
     search_params[:sort_by]||="created_at desc"
     Group.internal_groups.where("name ILIKE :search", search: "%#{search_params[:name].strip}%").order(search_params[:sort_by])
   end
+
+  def get_member_list(search_params)
+    search_params[:credential]||=""
+    search_params[:sort_by]||="last joined"
+    self.users.includes(:group_members)
+    .where("name ILIKE :search OR username ILIKE :search OR email ILIKE :search", search: "%#{search_params[:credential].strip}%")
+    .order(member_sort_criteria(search_params[:sort_by]))
+    .map{|x| x.attributes.merge(avatar: x.avatar.url, role: x.group_members.last.member_type, joined_at: x.group_members.last.created_at, expiration_date: x.group_members.last.expiration_date)}
+  end
+
+  def member_sort_criteria(sort_by)
+    case sort_by
+    when "last joined"
+      "group_members.created_at desc"
+    when "name ascending"
+      "users.name asc"
+    when "name descending"
+      "users.name desc"
+    when "oldest joined"
+      "group_members.created_at asc"
+    when "oldest sign-in"
+      "users.created_at desc"
+    when "recent sign-in"
+      "users.created_at asc"
+    end
+  end
 end
