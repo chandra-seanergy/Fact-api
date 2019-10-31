@@ -3,14 +3,14 @@ class Api::V1::GroupListingController < ApplicationController
 
   # Fetch list of all groups where the visibility is public
   def public_groups
-    groups = Group.public_groups
+    groups = Group.find_public_groups(search_params)
     render json: {status: 200, message: "Group list feched successfully.", groups: groups.map{|x|
        x.attributes.merge(avatar: x.avatar.url, member_count: x.group_members.length)}}
   end
 
   # Fetch list of all groups where the visibility is internal
   def internal_groups
-    groups = Group.internal_groups
+    groups = Group.find_internal_groups(search_params)
     render json: {status: 200, message: "Group list feched successfully.", groups: groups.map{|x|
        x.attributes.merge(avatar: x.avatar.url, member_count: x.group_members.length)}}
   end
@@ -31,8 +31,14 @@ class Api::V1::GroupListingController < ApplicationController
 
   # API To fetch all groups where the user is owner or is a member of
   def your_groups
-    all_groups = @current_user.your_groups
+    all_groups = @current_user.your_groups(search_params)
     render json: {status: 200, message: "Group list feched successfully.", groups: all_groups.map{|x|
        x.attributes.merge(avatar: x.avatar.url, member_count: x.group_members.length)}}
+  end
+
+  private
+
+  def search_params
+    params.permit(:name, :sort_by)
   end
 end
