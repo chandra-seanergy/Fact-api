@@ -24,4 +24,16 @@ class Group < ApplicationRecord
   	  self.unique_group_id = rand(10000000)
   	end until(Group.find_by(unique_group_id: unique_group_id).nil?)
   end
+
+  def self.find_public_groups(search_params)
+    search_params[:name]||=""
+    search_params[:sort_by]||="created_at desc"
+    Group.public_groups.where("name ILIKE :search", search: "%#{search_params[:name].strip}%").order(search_params[:sort_by])
+  end
+
+  def self.find_internal_groups(search_params)
+    search_params[:name]||=""
+    search_params[:sort_by]||="created_at desc"
+    Group.internal_groups.where("name ILIKE :search", search: "%#{search_params[:name].strip}%").order(search_params[:sort_by])
+  end
 end
