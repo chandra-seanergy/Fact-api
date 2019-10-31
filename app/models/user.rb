@@ -13,7 +13,7 @@ class User < ApplicationRecord
 
   validates_presence_of :name, :username , on: :create
   validates :username, uniqueness: true
-  validates_uniqueness_of :public_email, :commit_email, :unique_user_id , allow_blank: true, allow_nil: true
+  validates_uniqueness_of :unique_user_id , allow_blank: true, allow_nil: true
 
   #callbacks
 
@@ -52,7 +52,9 @@ class User < ApplicationRecord
     where("name ILIKE :search OR username ILIKE :search OR email ILIKE :search", search: credentials)
   end
 
-  def your_groups
-    self.owned_groups+self.groups
+  def your_groups(search_params)
+    search_params[:name]||=""
+    search_params[:sort_by]||="created_at desc"
+    Group.where("groups.id IN (SELECT groups.id FROM groups JOIN group_members on(group_members.group_id=groups.id) where group_members.user_id=:user_id and expiration_date>now() or expiration_date is null) OR groups.id IN (SELECT groups.id from groups where owner_id=:user_id) and name ILIKE :search", search: "%#{search_params[:name].strip}%", user_id: self.id).order(search_params[:sort_by])
   end
 end
