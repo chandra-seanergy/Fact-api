@@ -4,6 +4,7 @@ class Group < ApplicationRecord
 
   # callbacks
   before_create :generate_group_id
+  after_create :map_owner_to_memberlist
 
   #validations
   validates :unique_group_id, uniqueness: true
@@ -24,6 +25,11 @@ class Group < ApplicationRecord
   	begin
   	  self.unique_group_id = rand(10000000)
   	end until(Group.find_by(unique_group_id: unique_group_id).nil?)
+  end
+
+  # Map creater as primary_owner of group
+  def map_owner_to_memberlist
+    GroupMember.create(group: self, user_id: self.owner_id, member_type: 5)
   end
 
   # Find public groups on the basis of search parameters and sort filters
