@@ -19,24 +19,28 @@ class Group < ApplicationRecord
   scope :public_groups, ->  { where(visibility: Group.visibilities[:is_public]).includes(:group_members) }
   scope :internal_groups, ->  { where(visibility: Group.visibilities[:is_internal]).includes(:group_members) }
 
+  # Generate Unique Group Id of 7 Digits to be saved before creating a entry
   def generate_group_id
   	begin
   	  self.unique_group_id = rand(10000000)
   	end until(Group.find_by(unique_group_id: unique_group_id).nil?)
   end
 
+  # Find public groups on the basis of search parameters and sort filters
   def self.find_public_groups(search_params)
     search_params[:name]||=""
     search_params[:sort_by]||="created_at desc"
     Group.public_groups.where("name ILIKE :search", search: "%#{search_params[:name].strip}%").order(search_params[:sort_by])
   end
 
+  # Find internal groups on the basis of search parameters and sort filters
   def self.find_internal_groups(search_params)
     search_params[:name]||=""
     search_params[:sort_by]||="created_at desc"
     Group.internal_groups.where("name ILIKE :search", search: "%#{search_params[:name].strip}%").order(search_params[:sort_by])
   end
 
+  # Search and find members of the group and return a sorted list
   def get_member_list(search_params)
     search_params[:credential]||=""
     search_params[:sort_by]||="last joined"
@@ -46,6 +50,7 @@ class Group < ApplicationRecord
     .map{|x| x.attributes.merge(avatar: x.avatar.url, role: x.group_members.last.member_type, joined_at: x.group_members.last.created_at, expiration_date: x.group_members.last.expiration_date)}
   end
 
+  # Returns the suitable order by clause for the query on the basis of filter applied
   def member_sort_criteria(sort_by)
     case sort_by
     when "last joined"

@@ -32,11 +32,11 @@ class Api::V1::GroupListingController < ApplicationController
   end
 
   private
-
+  # Allow parameters to be passed to model for search and sort filters
   def search_params
     params.permit(:name, :sort_by)
   end
-
+  # Reduce Code redundancy by creating common method for common response json
   def response_list(list)
     list.map{|x| x.attributes.merge(avatar: x.avatar.url, member_count: x.group_members.length)}
   end
