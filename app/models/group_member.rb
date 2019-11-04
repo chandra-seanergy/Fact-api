@@ -1,5 +1,5 @@
 class GroupMember < ApplicationRecord
-  enum member_type: { guest: 0, reporter: 1, developer: 2, maintainer: 3, owner: 4 }
+  enum member_type: { guest: 0, reporter: 1, developer: 2, maintainer: 3, owner: 4, primary_owner: 5 }
   #validations
   validates_presence_of :user_id, :group_id , on: :create
 

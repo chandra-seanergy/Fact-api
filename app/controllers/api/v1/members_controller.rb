@@ -6,7 +6,7 @@ class Api::V1::MembersController < ApplicationController
   # Display list of all members in the group 
   def member_list
     group_members = @group.get_member_list(member_params)
-    render json: {status: 200, message: "member list fetched successfully.", owner: @group.owner.attributes.merge(avatar: @group.owner.avatar.url), members: group_members}
+    render json: {status: 200, message: "member list fetched successfully.", members: group_members}
   end
 
   # Add Member to Group
