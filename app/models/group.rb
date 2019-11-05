@@ -49,7 +49,7 @@ class Group < ApplicationRecord
   # Search and find members of the group and return a sorted list
   def get_member_list(search_params)
     search_params[:credential]||=""
-    search_params[:sort_by]||="last joined"
+    search_params[:sort_by]||="name ascending"
     self.users.includes(:group_members)
     .where("name ILIKE :search OR username ILIKE :search OR email ILIKE :search", search: "%#{search_params[:credential].strip}%")
     .order(member_sort_criteria(search_params[:sort_by]))
