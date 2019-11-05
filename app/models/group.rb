@@ -53,7 +53,7 @@ class Group < ApplicationRecord
     self.users.includes(:group_members)
     .where("name ILIKE :search OR username ILIKE :search OR email ILIKE :search", search: "%#{search_params[:credential].strip}%")
     .order(member_sort_criteria(search_params[:sort_by]))
-    .map{|x| x.attributes.merge(avatar: x.avatar.url, role: x.group_members.last.member_type, joined_at: x.group_members.last.created_at, expiration_date: x.group_members.last.expiration_date)}
+    .map{|x| x.attributes.merge(avatar: x.avatar.url, role: x.group_members.last.member_type, roleId: x.group_members.last.member_type_before_type_cast, joined_at: x.group_members.last.created_at, expiration_date: x.group_members.last.expiration_date)}
   end
 
   # Returns the suitable order by clause for the query on the basis of filter applied
