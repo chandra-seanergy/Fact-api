@@ -74,6 +74,11 @@ class Api::V1::UsersController < ApplicationController
       end
     end
 
+    # Find and Return All groups user visited in decreasing order of visit count
+    def frequent_groups
+      render json: {status: 200, groups: @current_user.find_frequent_groups}
+    end
+
     private
     # Allow strong parameters to be validated at time of user registration
     def user_params

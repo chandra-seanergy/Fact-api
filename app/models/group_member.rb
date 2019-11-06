@@ -16,4 +16,10 @@ class GroupMember < ApplicationRecord
     end
     return members
   end
+
+  # Update User's Group Visit Count everytime he opens a group
+  def self.update_visit_count(group, current_user)
+  	group_member = self.find_by(group: group, user: current_user)
+  	group_member.update(visit_count: group_member.visit_count+1) if group_member
+  end
 end

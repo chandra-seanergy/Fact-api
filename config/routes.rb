@@ -11,6 +11,7 @@ Rails.application.routes.draw do
         post :verify_otp
         get :resend_confirmation
         put :update_profile
+        get :frequent_groups
       end
     end
     resources :two_factor_authentications do
