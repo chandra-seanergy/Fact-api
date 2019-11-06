@@ -16,6 +16,7 @@ class Api::V1::GroupsController < ApplicationController
 
   # Display group details
   def show
+    GroupMember.update_visit_count(@group, @current_user)
     render json: {status: 200, group: @group}
   end
 
