@@ -63,4 +63,12 @@ class User < ApplicationRecord
     search_params[:sort_by]||="created_at desc"
     Group.where("groups.id IN (SELECT groups.id FROM groups JOIN group_members on(group_members.group_id=groups.id) where group_members.user_id=:user_id and group_members.expiration_date>now() or group_members.expiration_date is null and groups.name ILIKE :search) OR groups.id IN (SELECT groups.id from groups where owner_id=:user_id and name ILIKE :search) OR groups.id IN (SELECT groups.id from groups where visibility = 1 and name ILIKE :search)", search: "%#{search_params[:name].strip}%", user_id: self.id).order(search_params[:sort_by])
   end
+
+  # Find recently visited groups on the basis of visit count
+  def find_frequent_groups
+    self.groups.includes(:group_members)
+    .where("group_members.visit_count<>0")
+    .order("group_members.visit_count desc")
+    .limit(5)
+  end
 end
